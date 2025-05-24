@@ -1,1 +1,22 @@
 *.out
+# C# output files
+*.dll
+*.exe
+# Visual Studio files
+*.suo
+*.user
+# Rider files
+.idea/
+# Visual Studio Code files
+.vscode/
+# Build directories
+bin/
+obj/
+# NuGet packages
+*.nupkg
+# Logs
+*.log
+# Temporary files
+*.tmp
+# Backup files
+*.bak
