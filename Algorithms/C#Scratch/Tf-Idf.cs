@@ -33,7 +33,7 @@ class TfIdfSearchDemo
             .ToList();
     }
 
-    static void Main()
+    static void Main1()
     {
         // Build vocabulary
         var vocabSet = new HashSet<string>();
