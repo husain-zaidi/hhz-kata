@@ -93,7 +93,7 @@ class Scratch
         serializePreOrder(root.right, arr);
     }
 
-     static Node deserializePreOrder(ref int i, List<int> arr) {
+    static Node deserializePreOrder(ref int i, List<int> arr) {
         
         // -1 meres null.
         if (arr[i] == -1) {
@@ -104,11 +104,48 @@ class Scratch
         // Create the root node.
         Node root = new Node(arr[i]);
         i++;
-        
+
         root.left = deserializePreOrder(ref i, arr);
         root.right = deserializePreOrder(ref i, arr);
         
         return root;
+    }
+
+    static bool search2dWord(char[][] grid, int row, int col, string word)
+    {
+        int m = grid.Length;
+        int n = grid[0].Length;
+
+        // only start searching form the first matching word
+        if (grid[row][col] != word[0])
+            return false;
+
+        int len = word.Length;
+
+        int[] x = { -1, -1, -1, 0, 0, 1, 1, 1 };
+        int[] y = { -1, 0, 1, -1, 1, -1, 0, 1 };
+
+        for (int dir = 0; dir < 8; dir++)
+        {
+            int k, currX = row + x[dir], currY = col + y[dir];
+
+            for (k = 1; k < len; k++)
+            {
+                if (currX >= m || currX < 0 || currY >= n || currY < 0)
+                    break;
+
+                if (grid[currX][currY] != word[k])
+                    break;
+
+                currX += x[dir];
+                currY += y[dir];
+            }
+
+            if (k == len)
+                return true;
+        }
+
+        return false;
     }
 
     static void Main()
@@ -121,18 +158,36 @@ class Scratch
         // int[] arr = { 3, 1, 4, 4, 5, 1, 6, 1 };
         // List<int> res = topKFrequent(arr, 2);
 
-        Node root = new Node(10);
-        root.left = new Node(20);
-        root.right = new Node(30);
-        root.left.left = new Node(40);
-        root.left.right = new Node(60);
+        // Node root = new Node(10);
+        // root.left = new Node(20);
+        // root.right = new Node(30);
+        // root.left.left = new Node(40);
+        // root.left.right = new Node(60);
 
-        List<int> res = new List<int>();
-        serializePreOrder(root, res);
+        // List<int> res = new List<int>();
+        // serializePreOrder(root, res);
 
-        foreach (var e in res)
-        {
-            Console.Write(e + " ");
+        char[][] grid = new char[][] {
+            new char[] { 'a', 'b', 'a', 'b' },
+            new char[] { 'a', 'b', 'e', 'b' },
+            new char[] { 'e', 'b', 'e', 'b' }
+        };
+        string word = "abe";
+
+        int m = grid.Length;
+        int n = grid[0].Length;
+        
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (search2dWord(grid, i, j, word)) {
+                    Console.WriteLine(i + "," + j);
+                }
+            }
         }
+
+        // foreach (var e in res)
+        // {
+        //     Console.Write(e + " ");
+        // }
     }
 }
