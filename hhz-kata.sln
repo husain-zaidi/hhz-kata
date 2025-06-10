@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Algorithms", "Algorithms", "{5D26F3B0-2769-F421-9ACD-527FA886E1D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "C#Scratch", "Algorithms\C#Scratch\C#Scratch.csproj", "{9924A924-8E3E-B981-B90A-24659D326432}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9924A924-8E3E-B981-B90A-24659D326432}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9924A924-8E3E-B981-B90A-24659D326432}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9924A924-8E3E-B981-B90A-24659D326432}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9924A924-8E3E-B981-B90A-24659D326432}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{9924A924-8E3E-B981-B90A-24659D326432} = {5D26F3B0-2769-F421-9ACD-527FA886E1D4}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E710F018-8E4B-48D1-965C-FF89F7860E4B}
+	EndGlobalSection
+EndGlobal

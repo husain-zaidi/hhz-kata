@@ -122,8 +122,8 @@ class Scratch
 
         int len = word.Length;
 
-        int[] x = { -1, -1, -1, 0, 0, 1, 1, 1 };
-        int[] y = { -1, 0, 1, -1, 1, -1, 0, 1 };
+        int[] x = [-1, -1, -1, 0, 0, 1, 1, 1];
+        int[] y = [-1, 0, 1, -1, 1, -1, 0, 1];
 
         for (int dir = 0; dir < 8; dir++)
         {
@@ -148,6 +148,17 @@ class Scratch
         return false;
     }
 
+    static int CountWays(int n, int[] memo)
+    {
+        if (n == 0 || n == 1)
+            return 1;
+
+        if (memo[n] != -1)
+            return memo[n];
+
+        return memo[n] = CountWays(n - 1, memo) + CountWays(n - 2, memo);
+    }
+
     static void Main()
     {
         // Console.WriteLine("The quick brown fox jumps over the lazy dog.");
@@ -167,23 +178,30 @@ class Scratch
         // List<int> res = new List<int>();
         // serializePreOrder(root, res);
 
-        char[][] grid = new char[][] {
-            new char[] { 'a', 'b', 'a', 'b' },
-            new char[] { 'a', 'b', 'e', 'b' },
-            new char[] { 'e', 'b', 'e', 'b' }
-        };
-        string word = "abe";
+        // char[][] grid = [
+        //     ['a', 'b', 'a', 'b'],
+        //     ['a', 'b', 'e', 'b'],
+        //     ['e', 'b', 'e', 'b']
+        // ];
+        // string word = "abe";
 
-        int m = grid.Length;
-        int n = grid[0].Length;
-        
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
-                if (search2dWord(grid, i, j, word)) {
-                    Console.WriteLine(i + "," + j);
-                }
-            }
-        }
+        // int m = grid.Length;
+        // int n = grid[0].Length;
+
+        // for (int i = 0; i < m; i++)
+        // {
+        //     for (int j = 0; j < n; j++)
+        //     {
+        //         if (search2dWord(grid, i, j, word))
+        //         {
+        //             Console.WriteLine(i + "," + j);
+        //         }
+        //     }
+        // }
+
+        // int[] memo = new int[10 + 1];
+        // Array.Fill(memo, -1);
+        // Console.WriteLine(CountWays(10, memo));
 
         // foreach (var e in res)
         // {
