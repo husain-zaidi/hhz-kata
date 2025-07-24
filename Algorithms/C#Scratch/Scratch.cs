@@ -159,6 +159,63 @@ class Scratch
         return memo[n] = CountWays(n - 1, memo) + CountWays(n - 2, memo);
     }
 
+    static string SimplifyPath(string path) {
+        string[] parts = path.Split('/');
+        Stack<string> simplifiedPath = new Stack<string>();
+
+        foreach(string section in parts)
+        {
+            if(section.StartsWith("/") || section == "." || string.IsNullOrEmpty(section))
+            {
+                continue;
+            } 
+            else if (section == "..")
+            {
+                if (simplifiedPath.Count > 0)
+                    simplifiedPath.Pop();
+            }
+            else
+            {
+                simplifiedPath.Push(section);
+            }
+        }
+
+        string output = "";
+
+        if (simplifiedPath.Count > 0)
+        {
+            foreach(string s in simplifiedPath.Reverse())
+            {
+                output += "/" + s;
+            }
+        }
+        else 
+        {
+            output = "/";
+        }
+        return output;
+    }
+
+    public int diameter = 0;
+
+    int LengthTillLeaf(Node node)
+    {
+        if (node == null)
+        {
+            return 0;
+        }
+
+        int lenLeft = LengthTillLeaf(node.left);
+        int lenRight = LengthTillLeaf(node.right);
+        diameter = Math.Max(diameter, lenLeft + lenRight);
+        return lenLeft > lenRight ? lenLeft + 1 : lenRight + 1;
+    }
+
+    public int DiameterOfBinaryTree(Node root) {
+        LengthTillLeaf(root);
+        return diameter;
+    }
+
     static void Main()
     {
         // Console.WriteLine("The quick brown fox jumps over the lazy dog.");
@@ -207,5 +264,7 @@ class Scratch
         // {
         //     Console.Write(e + " ");
         // }
+
+        SimplifyPath("/home//foo/");
     }
 }
