@@ -216,6 +216,137 @@ class Scratch
         return diameter;
     }
 
+    static int ShortestPath(int[][] grid, int k) {
+        int m = grid.Length; // Rows
+        int n = grid[0].Length; // Columns
+
+        // If the starting or ending point is an obstacle, and k is 0, it's impossible.
+        if (grid[0][0] == 1 && k == 0) return -1;
+        if (grid[m - 1][n - 1] == 1 && k == 0 && (m > 1 || n > 1)) return -1;
+
+
+        // If we can eliminate all obstacles, the shortest path is Manhattan distance.
+        // This is a significant optimization for large k.
+        if (k >= m + n - 2) {
+            return m + n - 2;
+        }
+
+        // State for BFS: (row, col, remaining_k)
+        // We need to keep track of the minimum obstacles remaining to reach a cell
+        // at a certain step count.
+        // `visited[r, c]` stores the maximum `k` value with which cell (r, c) was reached.
+        // We only visit a cell (r, c) if our current `k` is greater than the `k`
+        // we previously used to reach it, indicating a potentially better path.
+        int[,] visited = new int[m, n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                visited[i, j] = -1; // Initialize with -1 to indicate not visited or with 0 k.
+            }
+        }
+
+        // BFS queue: stores tuples of (row, col, remaining_k_after_obstacle_elimination)
+        Queue<(int r, int c, int remainingK)> q = new Queue<(int r, int c, int remainingK)>();
+
+        // Starting point: (0, 0) with initial k.
+        q.Enqueue((0, 0, k));
+        visited[0, 0] = k; // Mark start as visited with initial k.
+
+        int steps = 0;
+
+        // Possible movements (up, down, left, right)
+        int[] dr = {-1, 1, 0, 0};
+        int[] dc = {0, 0, -1, 1};
+
+        while (q.Count > 0) {
+            int levelSize = q.Count; // Process all nodes at the current level
+
+            for (int i = 0; i < levelSize; i++) {
+                var current = q.Dequeue();
+                int r = current.r;
+                int c = current.c;
+                int currentK = current.remainingK;
+
+                // If we reached the destination, this is the shortest path.
+                if (r == m - 1 && c == n - 1) {
+                    return steps;
+                }
+
+                // Explore neighbors
+                for (int j = 0; j < 4; j++) {
+                    int nr = r + dr[j];
+                    int nc = c + dc[j];
+
+                    // Check boundaries
+                    if (nr >= 0 && nr < m && nc >= 0 && nc < n) {
+                        int newK = currentK;
+                        // If it's an obstacle, reduce k.
+                        if (grid[nr][nc] == 1) {
+                            newK--;
+                        }
+
+                        // Check if we have enough k to pass through or if it's an empty cell.
+                        // And if this path to (nr, nc) has more remaining k than a previously found path,
+                        // or if it's the first time visiting (nr, nc).
+                        if (newK >= 0 && newK > visited[nr, nc]) {
+                            visited[nr, nc] = newK;
+                            q.Enqueue((nr, nc, newK));
+                        }
+                    }
+                }
+            }
+            steps++; // Increment steps after processing a whole level
+        }
+
+        return -1;
+    }
+
+    static int SwimInWater(int[][] grid) {
+        // BFS with submerged condition
+        int m = grid.Length;
+        int n = grid[0].Length;
+
+        // Take smallest number to traverse (it will be less than time always)
+        PriorityQueue<(int r, int c), int> q = new();
+        
+        int[] dirX = [0,1,-1,0];
+        int[] dirY = [1,0,0,-1];
+
+        int[,] visited = new int[m,n];
+
+        for(int i = 0; i < m; i++)
+            for(int j = 0; j < n; j++)
+                visited[i,j] = -1;
+        
+        q.Enqueue((0,0),0);
+        visited[0,0] = 1;
+        int maxDis = int.MinValue;
+
+        while(q.Count > 0)
+        {
+            var currentCell = q.Dequeue();
+            //max in path represents the total time taken rest traversal is instant
+            maxDis = Math.Max(maxDis, grid[currentCell.r][currentCell.c]); 
+
+            if (currentCell.r == m-1 && currentCell.c == n-1)
+                return maxDis;
+
+            // queue neighbors
+            for (int j = 0; j < 4; j++)
+            {
+                int nextR = currentCell.r + dirX[j];
+                int nextC = currentCell.c + dirY[j];
+                if (nextR >= 0 && nextR < m && nextC >= 0 && nextC < n
+                        && visited[nextR, nextC] != 1)
+                {
+                    q.Enqueue((nextR, nextC), grid[nextR][nextC]);
+                    visited[nextR, nextC] = 1;
+                }
+            }
+        }
+
+        return maxDis;
+    }
+
     static void Main()
     {
         // Console.WriteLine("The quick brown fox jumps over the lazy dog.");
@@ -265,6 +396,14 @@ class Scratch
         //     Console.Write(e + " ");
         // }
 
-        SimplifyPath("/home//foo/");
+        // SimplifyPath("/home//foo/");
+
+        Console.WriteLine(ShortestPath([
+            [0,0,0],
+            [1,1,0],
+            [0,0,0],
+            [0,1,1],
+            [0,0,0]
+        ], 1));
     }
 }
