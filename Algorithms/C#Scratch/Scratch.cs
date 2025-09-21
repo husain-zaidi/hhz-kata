@@ -14,7 +14,7 @@ class Node {
 
 class Scratch
 {
-
+    // subarray sum with target sum
     static List<int> subArraySum(int[] arr, int target)
     {
         int s = 0, e = 0;
@@ -46,14 +46,32 @@ class Scratch
         res.Add(-1);
         return res;
     }
+    
+    // Maximum Subarray - Kadane's Algorithm with -ve numbers
+    public int MaxSubArray(int[] nums)
+    {
+        int MaxSum = nums[0];
+        int MaxSoFar = nums[0];
+        for (int i = 1; i < nums.Length; i++)
+        {
+            if (MaxSoFar < 0)
+                MaxSoFar = nums[i];
+            else
+                MaxSoFar += nums[i];
 
+            MaxSum = Math.Max(MaxSoFar, MaxSum);
+        }
+        return MaxSum;
+    }
+
+    // Top K Frequent Elements - Min Heap
     static List<int> topKFrequent(int[] arr, int k)
     {
         Dictionary<int, int> itemFreq = new Dictionary<int, int>();
 
         foreach (int val in arr)
         {
-            itemFreq[val] =  itemFreq.GetValueOrDefault(val, 0) + 1;
+            itemFreq[val] = itemFreq.GetValueOrDefault(val, 0) + 1;
         }
 
         PriorityQueue<int, int> pq = new PriorityQueue<int, int>();
@@ -159,16 +177,18 @@ class Scratch
         return memo[n] = CountWays(n - 1, memo) + CountWays(n - 2, memo);
     }
 
-    static string SimplifyPath(string path) {
+    // simplify unix path - stack
+    static string SimplifyPath(string path)
+    {
         string[] parts = path.Split('/');
         Stack<string> simplifiedPath = new Stack<string>();
 
-        foreach(string section in parts)
+        foreach (string section in parts)
         {
-            if(section.StartsWith("/") || section == "." || string.IsNullOrEmpty(section))
+            if (section.StartsWith("/") || section == "." || string.IsNullOrEmpty(section))
             {
                 continue;
-            } 
+            }
             else if (section == "..")
             {
                 if (simplifiedPath.Count > 0)
@@ -184,12 +204,12 @@ class Scratch
 
         if (simplifiedPath.Count > 0)
         {
-            foreach(string s in simplifiedPath.Reverse())
+            foreach (string s in simplifiedPath.Reverse())
             {
                 output += "/" + s;
             }
         }
-        else 
+        else
         {
             output = "/";
         }
@@ -215,8 +235,10 @@ class Scratch
         LengthTillLeaf(root);
         return diameter;
     }
-
-    static int ShortestPath(int[][] grid, int k) {
+    
+    // shortest path where k obstacles can be removed - BFS with state - 1 is obstacle 0 is empty
+    static int ShortestPath(int[][] grid, int k)
+    {
         int m = grid.Length; // Rows
         int n = grid[0].Length; // Columns
 
@@ -227,7 +249,8 @@ class Scratch
 
         // If we can eliminate all obstacles, the shortest path is Manhattan distance.
         // This is a significant optimization for large k.
-        if (k >= m + n - 2) {
+        if (k >= m + n - 2)
+        {
             return m + n - 2;
         }
 
@@ -238,8 +261,10 @@ class Scratch
         // We only visit a cell (r, c) if our current `k` is greater than the `k`
         // we previously used to reach it, indicating a potentially better path.
         int[,] visited = new int[m, n];
-        for (int i = 0; i < m; i++) {
-            for (int j = 0; j < n; j++) {
+        for (int i = 0; i < m; i++)
+        {
+            for (int j = 0; j < n; j++)
+            {
                 visited[i, j] = -1; // Initialize with -1 to indicate not visited or with 0 k.
             }
         }
@@ -254,40 +279,47 @@ class Scratch
         int steps = 0;
 
         // Possible movements (up, down, left, right)
-        int[] dr = {-1, 1, 0, 0};
-        int[] dc = {0, 0, -1, 1};
+        int[] dr = { -1, 1, 0, 0 };
+        int[] dc = { 0, 0, -1, 1 };
 
-        while (q.Count > 0) {
+        while (q.Count > 0)
+        {
             int levelSize = q.Count; // Process all nodes at the current level
 
-            for (int i = 0; i < levelSize; i++) {
+            for (int i = 0; i < levelSize; i++)
+            {
                 var current = q.Dequeue();
                 int r = current.r;
                 int c = current.c;
                 int currentK = current.remainingK;
 
                 // If we reached the destination, this is the shortest path.
-                if (r == m - 1 && c == n - 1) {
+                if (r == m - 1 && c == n - 1)
+                {
                     return steps;
                 }
 
                 // Explore neighbors
-                for (int j = 0; j < 4; j++) {
+                for (int j = 0; j < 4; j++)
+                {
                     int nr = r + dr[j];
                     int nc = c + dc[j];
 
                     // Check boundaries
-                    if (nr >= 0 && nr < m && nc >= 0 && nc < n) {
+                    if (nr >= 0 && nr < m && nc >= 0 && nc < n)
+                    {
                         int newK = currentK;
                         // If it's an obstacle, reduce k.
-                        if (grid[nr][nc] == 1) {
+                        if (grid[nr][nc] == 1)
+                        {
                             newK--;
                         }
 
                         // Check if we have enough k to pass through or if it's an empty cell.
                         // And if this path to (nr, nc) has more remaining k than a previously found path,
                         // or if it's the first time visiting (nr, nc).
-                        if (newK >= 0 && newK > visited[nr, nc]) {
+                        if (newK >= 0 && newK > visited[nr, nc])
+                        {
                             visited[nr, nc] = newK;
                             q.Enqueue((nr, nc, newK));
                         }
@@ -300,34 +332,36 @@ class Scratch
         return -1;
     }
 
-    static int SwimInWater(int[][] grid) {
+    // Swim in Rising Water - BFS with priority queue, travel is instant, only wait for water to rise
+    static int SwimInWater(int[][] grid)
+    {
         // BFS with submerged condition
         int m = grid.Length;
         int n = grid[0].Length;
 
         // Take smallest number to traverse (it will be less than time always)
         PriorityQueue<(int r, int c), int> q = new();
-        
-        int[] dirX = [0,1,-1,0];
-        int[] dirY = [1,0,0,-1];
 
-        int[,] visited = new int[m,n];
+        int[] dirX = [0, 1, -1, 0];
+        int[] dirY = [1, 0, 0, -1];
 
-        for(int i = 0; i < m; i++)
-            for(int j = 0; j < n; j++)
-                visited[i,j] = -1;
-        
-        q.Enqueue((0,0),0);
-        visited[0,0] = 1;
+        int[,] visited = new int[m, n];
+
+        for (int i = 0; i < m; i++)
+            for (int j = 0; j < n; j++)
+                visited[i, j] = -1;
+
+        q.Enqueue((0, 0), 0);
+        visited[0, 0] = 1;
         int maxDis = int.MinValue;
 
-        while(q.Count > 0)
+        while (q.Count > 0)
         {
             var currentCell = q.Dequeue();
             //max in path represents the total time taken rest traversal is instant
-            maxDis = Math.Max(maxDis, grid[currentCell.r][currentCell.c]); 
+            maxDis = Math.Max(maxDis, grid[currentCell.r][currentCell.c]);
 
-            if (currentCell.r == m-1 && currentCell.c == n-1)
+            if (currentCell.r == m - 1 && currentCell.c == n - 1)
                 return maxDis;
 
             // queue neighbors
@@ -346,6 +380,45 @@ class Scratch
 
         return maxDis;
     }
+
+    // Trapping Rain Water - Two Pointer - return total water trapped
+    static int Trap(int[] height)
+    {
+        int total = 0, l = 0, r = height.Length - 1; // Initialize total and two pointers
+        int lmax = 0, rmax = height[r]; // Initialize max heights for left and right
+
+        while (l < r)
+        {
+            if (height[l] <= height[r])
+            {
+                // If left height is less than or equal to right height
+                if (height[l] < lmax)
+                {
+                    total += lmax - height[l]; // Water trapped on the left
+                }
+                else
+                {
+                    lmax = height[l]; // Update left max height
+                }
+                l++; // Move left pointer
+            }
+            else
+            {
+                // If right height is less than left height
+                if (height[r] < rmax)
+                {
+                    total += rmax - height[r]; // Water trapped on the right
+                }
+                else
+                {
+                    rmax = height[r]; // Update right max height
+                }
+                r--; // Move right pointer
+            }
+        }
+        return total; // Return total water trapped
+    }
+
 
     static void Main()
     {
